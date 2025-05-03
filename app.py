@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todos.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Modelo de Usuário
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
