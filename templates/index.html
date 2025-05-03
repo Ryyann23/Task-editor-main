@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumTask</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #cc43ee;
+            --primary-dark: #b33ad4;
+            --secondary: #bf37c9;
+            --accent: #d048ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #820f86;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --light: #1a1a1a;
+            --dark: #f8f9fa;
+            --gray: #adb5bd;
+            --light-gray: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+
+        .stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            transition: var(--transition);
+            background-color: var(--light-gray);
+        }
+
+        .stat-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .stat-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: none;
+            background-color: var(--light-gray);
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .todo-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 3rem;
+            transition: var(--transition);
+            background-color: var(--light-gray);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e11d48;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #ea580c;
+            transform: translateY(-2px);
+        }
+
+        .todo-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .todo-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            background-color: var(--light-gray);
+        }
+
+        .todo-item.completed {
+            opacity: 0.8;
+        }
+
+        .todo-item.completed .todo-title {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+
+        .todo-item.completed::after {
+            content: "CONCLUÍDO";
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background-color: var(--success);
+            color: white;
+            padding: 0.25rem 2rem;
+            transform: rotate(45deg);
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .todo-info {
+            margin-bottom: 1rem;
+        }
+
+        .todo-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .todo-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .todo-date {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-container input {
+            width: auto;
+            transform: scale(1.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 500px;
+            transform: translateY(-20px);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background-color: #10b981;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .todo-list {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                width: 100%;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .todo-item {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .todo-item:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+
+        .todo-item:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1><i class="fas fa-tasks"></i> QuantumTask</h1>
+                <p>Gerencie suas tarefas de forma fácil e eficiente!</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card" id="totalTasks">
+                <h3>0</h3>
+                <p>Tarefas no total</p>
+            </div>
+            <div class="stat-card" id="completedTasks">
+                <h3>0</h3>
+                <p>Concluídas</p>
+            </div>
+            <div class="stat-card" id="pendingTasks">
+                <h3>0</h3>
+                <p>Pendentes</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todas</button>
+            <button class="filter-btn" data-filter="completed">Concluídas</button>
+            <button class="filter-btn" data-filter="pending">Pendentes</button>
+        </div>
+
+        <div class="todo-form">
+            <h2><i class="fas fa-plus-circle"></i> Adicionar Nova Tarefa</h2>
+            <form id="addTodoForm">
+                <div class="form-group">
+                    <label for="title">Título *</label>
+                    <input type="text" id="title" required placeholder="O que precisa ser feito?">
+                </div>
+                <div class="form-group">
+                    <label for="description">Descrição</label>
+                    <textarea id="description" placeholder="Detalhes da tarefa..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="reset" class="btn-secondary">
+                        <i class="fas fa-eraser"></i> Limpar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Salvar Tarefa
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="todo-list" id="todoList">
+            <!-- Tarefas serão inseridas aqui via JavaScript -->
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list"></i>
+                <p>Nenhuma tarefa encontrada. Adicione sua primeira tarefa!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Editar Tarefa</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="editTodoForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editTitle">Título *</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Descrição</label>
+                    <textarea id="editDescription"></textarea>
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="editCompleted">
+                    <label for="editCompleted">Tarefa concluída</label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelEdit">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+
+        const API_URL = '/api/todos';
+        let currentFilter = 'all';
+        let todos = [];
+
+        const themeToggle = document.getElementById('themeToggle');
+        const addTodoForm = document.getElementById('addTodoForm');
+        const editTodoForm = document.getElementById('editTodoForm');
+        const todoList = document.getElementById('todoList');
+        const editModal = document.getElementById('editModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const toast = document.getElementById('toast');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const totalTasksElement = document.getElementById('totalTasks').querySelector('h3');
+        const completedTasksElement = document.getElementById('completedTasks').querySelector('h3');
+        const pendingTasksElement = document.getElementById('pendingTasks').querySelector('h3');
+
+
+        themeToggle.addEventListener('click', () => {
+            document.body.setAttribute('data-theme', 
+                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            
+            const icon = themeToggle.querySelector('i');
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.dataset.filter;
+                renderTodos();
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTodos();
+            
+
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.setAttribute('data-theme', 'dark');
+                const icon = themeToggle.querySelector('i');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        });
+
+
+        addTodoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description
+                    }),
+                });
+                
+                if (response.ok) {
+                    addTodoForm.reset();
+                    loadTodos();
+                    showToast('Tarefa adicionada com sucesso!', 'success');
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar tarefa:', error);
+                showToast('Erro ao adicionar tarefa', 'error');
+            }
+        });
+
+
+        async function loadTodos() {
+            try {
+                const response = await fetch(API_URL);
+                todos = await response.json();
+                renderTodos();
+                updateStats();
+            } catch (error) {
+                console.error('Erro ao carregar tarefas:', error);
+                showToast('Erro ao carregar tarefas', 'error');
+            }
+        }
+
+        function renderTodos() {
+
+            let filteredTodos = todos;
+            if (currentFilter === 'completed') {
+                filteredTodos = todos.filter(todo => todo.completed);
+            } else if (currentFilter === 'pending') {
+                filteredTodos = todos.filter(todo => !todo.completed);
+            }
+
+            todoList.innerHTML = '';
+
+            if (filteredTodos.length === 0) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'empty-state';
+                emptyState.innerHTML = `
+                    <i class="fas fa-clipboard-list"></i>
+                    <p>Nenhuma tarefa ${currentFilter === 'all' ? '' : currentFilter === 'completed' ? 'concluída' : 'pendente'} encontrada.</p>
+                `;
+                todoList.appendChild(emptyState);
+                return;
+            }
+
+            filteredTodos.forEach(todo => {
+                const todoElement = createTodoElement(todo);
+                todoList.appendChild(todoElement);
+            });
+        }
+
+
+        function createTodoElement(todo) {
+            const todoItem = document.createElement('div');
+            todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+            todoItem.dataset.id = todo.id;
+            
+            const createdAt = new Date();
+            const formattedDate = createdAt.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            todoItem.innerHTML = `
+                <div class="todo-info">
+                    <h3 class="todo-title">${todo.title}</h3>
+                    <p class="todo-description">${todo.description || 'Sem descrição'}</p>
+                    <div class="todo-date">
+                        <i class="far fa-calendar-alt"></i>
+                        Criada em: ${formattedDate}
+                    </div>
+                </div>
+                <div class="todo-actions">
+                    <button class="btn-warning" onclick="openEditModal(${todo.id})">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn-danger" onclick="deleteTodo(${todo.id})">
+                        <i class="fas fa-trash-alt"></i> Excluir
+                    </button>
+                </div>
+            `;
+            
+            return todoItem;
+        }
+
+        async function openEditModal(id) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`);
+                const todo = await response.json();
+                
+                document.getElementById('editId').value = todo.id;
+                document.getElementById('editTitle').value = todo.title;
+                document.getElementById('editDescription').value = todo.description || '';
+                document.getElementById('editCompleted').checked = todo.completed;
+                
+                editModal.classList.add('active');
+            } catch (error) {
+                console.error('Erro ao abrir modal de edição:', error);
+                showToast('Erro ao carregar tarefa para edição', 'error');
+            }
+        }
+
+        function closeEditModal() {
+            editModal.classList.remove('active');
+        }
+
+        closeModal.addEventListener('click', closeEditModal);
+        cancelEdit.addEventListener('click', closeEditModal);
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeEditModal();
+            }
+        });
+
+        editTodoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('editTitle').value;
+            const description = document.getElementById('editDescription').value;
+            const completed = document.getElementById('editCompleted').checked;
+            
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        completed
+                    }),
+                });
+                
+                if (response.ok) {
+                    closeEditModal();
+                    loadTodos();
+                    showToast('Tarefa atualizada com sucesso!', 'success');
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar tarefa:', error);
+                showToast('Erro ao atualizar tarefa', 'error');
+            }
+        });
+
+        async function deleteTodo(id) {
+            if (confirm('Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.')) {
+                try {
+                    const response = await fetch(`${API_URL}/${id}`, {
+                        method: 'DELETE',
+                    });
+                    
+                    if (response.ok) {
+                        loadTodos();
+                        showToast('Tarefa excluída com sucesso!', 'success');
+                    }
+                } catch (error) {
+                    console.error('Erro ao excluir tarefa:', error);
+                    showToast('Erro ao excluir tarefa', 'error');
+                }
+            }
+        }
+
+        function updateStats() {
+            totalTasksElement.textContent = todos.length;
+            const completed = todos.filter(todo => todo.completed).length;
+            completedTasksElement.textContent = completed;
+            pendingTasksElement.textContent = todos.length - completed;
+        }
+
+        function showToast(message, type = 'info') {
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        window.openEditModal = openEditModal;
+        window.deleteTodo = deleteTodo;
+    </script>
+
+<script>
+    fetch('/api/todos')
+        .then(response => {
+            if (response.status === 401) {
+                window.location.href = '/login';
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao verificar autenticação:', error);
+            window.location.href = '/login';
+        });
+</script>
+
+</body>
+</html>
